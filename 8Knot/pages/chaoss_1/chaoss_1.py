@@ -4,8 +4,8 @@ import dash_bootstrap_components as dbc
 import warnings
 
 # import visualization cards
-from .visualizations.project_velocity import gc_project_velocity
-from .visualizations.contrib_importance_pie import gc_contrib_importance_pie
+from .visualizations.issue_response_time import gc_issue_response_time
+from .visualizations.organizational_diversity import gc_organizational_diversity
 
 warnings.filterwarnings("ignore")
 
@@ -15,8 +15,8 @@ layout = dbc.Container(
     [
         dbc.Row(
             [
-                dbc.Col(gc_contrib_importance_pie, width=6),
-                dbc.Col(gc_project_velocity, width=6),
+                dbc.Col(gc_issue_response_time, width=6),
+                dbc.Col(gc_organizational_diversity, width=6),
             ],
             align="center",
             style={"marginBottom": ".5%"},
