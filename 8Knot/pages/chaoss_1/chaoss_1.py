@@ -16,8 +16,6 @@ layout = dbc.Container(
     [
         dbc.Row(
             [
-                dbc.Col(gc_issue_response_time, width=6),
-                dbc.Col(gc_organizational_diversity, width=6),
                 dbc.Col(gc_defect_resolution_duration, width=6),
             ],
             align="center",
