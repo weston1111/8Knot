@@ -177,18 +177,19 @@ def process_data(df: pd.DataFrame, start_date, end_date):
 
     # convert to datetime objects rather than strings
     # ADD ANY OTHER COLUMNS WITH DATETIME
-    #df["COLUMN_WITH_DATETIME"] = pd.to_datetime(df["COLUMN_WITH_DATETIME"], utc=True)
-    logging.warning(f"*********************** TEST PRINT ***********************")
-    test_var = df[0]
-    for item in test_var:
-        logging.warning(f"{item}")
-    logging.warning(f"{df}")
-    logging.warning(f"*********************** END TEST *************************")
+    df["created"] = pd.to_datetime(df["created"], utc=True)
+    df["merged"] = pd.to_datetime(df["merged"], utc=True)
+    df["closed"] = pd.to_datetime(df["closed"], utc=True)
+    # logging.warning(f"*********************** TEST PRINT ***********************")
+    # pd.set_option('display.max_rows', None, 'display.max_columns', None)
+    # logging.warning(f"{df}")
+    # logging.warning(f"*********************** END TEST *************************")
 
-    # order values chronologically by COLUMN_TO_SORT_BY date
-    #df = df.sort_values(by="COLUMN_TO_SORT_BY", axis=0, ascending=True)
+    # order values chronologically by created date
+    df = df.sort_values(by="created", axis=0, ascending=True)
 
-    """LOOK AT OTHER VISUALIZATIONS TO SEE IF ANY HAVE A SIMILAR DATA PROCESS"""
+    # then include only those change requests created within the time scope
+    
 
     return df
 
