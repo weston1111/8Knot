@@ -8,7 +8,7 @@ import logging
 from dateutil.relativedelta import *  # type: ignore
 import plotly.express as px
 from pages.utils.graph_utils import get_graph_time_values, color_seq
-from queries.QUERY_NAME import QUERY_NAME as QUERY_INITIALS
+# from queries.QUERY_NAME import QUERY_NAME as QUERY_INITIALS
 import io
 from cache_manager.cache_manager import CacheManager as cm
 from pages.utils.job_utils import nodata_graph
@@ -220,10 +220,10 @@ def process_data(df: pd.DataFrame, interval):
 
     # convert to datetime objects rather than strings
     # ADD ANY OTHER COLUMNS WITH DATETIME
-    df["COLUMN_WITH_DATETIME"] = pd.to_datetime(df["COLUMN_WITH_DATETIME"], utc=True)
+    # df["COLUMN_WITH_DATETIME"] = pd.to_datetime(df["COLUMN_WITH_DATETIME"], utc=True)
 
     # order values chronologically by COLUMN_TO_SORT_BY date
-    df = df.sort_values(by="COLUMN_TO_SORT_BY", axis=0, ascending=True)
+    # df = df.sort_values(by="COLUMN_TO_SORT_BY", axis=0, ascending=True)
 
     """LOOK AT OTHER VISUALIZATIONS TO SEE IF ANY HAVE A SIMILAR DATA PROCESS"""
 
