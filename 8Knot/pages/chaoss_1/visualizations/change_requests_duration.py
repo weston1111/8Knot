@@ -8,7 +8,8 @@ import logging
 from dateutil.relativedelta import *  # type: ignore
 import plotly.express as px
 from pages.utils.graph_utils import get_graph_time_values, color_seq
-from queries.change_requests_query import change_requests_query as crq
+#from queries.change_requests_query import change_requests_query as crq
+from queries.prs_query import prs_query as prq
 import io
 from cache_manager.cache_manager import CacheManager as cm
 from pages.utils.job_utils import nodata_graph
@@ -138,19 +139,19 @@ def toggle_popover(n, is_open):
     # Output(f"check-alert-{PAGE}-{VIZ_ID}", "is_open"), USE WITH ADDITIONAL PARAMETERS
     # if additional output is added, change returns accordingly
     [
-        #Input("repo-choices", "data"),
+        Input("repo-choices", "data"),
         Input(f"date-picker-range-{PAGE}-{VIZ_ID}", "start_date"),
         Input(f"date-picker-range-{PAGE}-{VIZ_ID}", "end_date"),
     ],
     background=True,
 )
-def change_requests_duration_graph(repolist, interval):
+def change_requests_duration_graph(repolist, start_date, end_date):
     # wait for data to asynchronously download and become available.
     cache = cm()
-    df = cache.grabm(func=crq, repos=repolist)
+    df = cache.grabm(func=prq, repos=repolist)
     while df is None:
         time.sleep(1.0)
-        df = cache.grabm(func=crq, repos=repolist)
+        df = cache.grabm(func=prq, repos=repolist)
 
     start = time.perf_counter()
     logging.warning(f"{VIZ_ID}- START")
@@ -161,32 +162,38 @@ def change_requests_duration_graph(repolist, interval):
         return nodata_graph
 
     # function for all data pre processing, COULD HAVE ADDITIONAL INPUTS AND OUTPUTS
-    df = process_data(df, interval)
+    df = process_data(df, start_date, end_date)
 
-    fig = create_figure(df, interval)
+    fig = create_figure(df, start_date, end_date)
 
     logging.warning(f"{VIZ_ID} - END - {time.perf_counter() - start}")
     return fig
 
 
-def process_data(df: pd.DataFrame, interval):
+def process_data(df: pd.DataFrame, start_date, end_date):
     """Implement your custom data-processing logic in this function.
     The output of this function is the data you intend to create a visualization with,
     requiring no further processing."""
 
     # convert to datetime objects rather than strings
     # ADD ANY OTHER COLUMNS WITH DATETIME
-    df["COLUMN_WITH_DATETIME"] = pd.to_datetime(df["COLUMN_WITH_DATETIME"], utc=True)
+    #df["COLUMN_WITH_DATETIME"] = pd.to_datetime(df["COLUMN_WITH_DATETIME"], utc=True)
+    logging.warning(f"*********************** TEST PRINT ***********************")
+    test_var = df[0]
+    for item in test_var:
+        logging.warning(f"{item}")
+    logging.warning(f"{df}")
+    logging.warning(f"*********************** END TEST *************************")
 
     # order values chronologically by COLUMN_TO_SORT_BY date
-    df = df.sort_values(by="COLUMN_TO_SORT_BY", axis=0, ascending=True)
+    #df = df.sort_values(by="COLUMN_TO_SORT_BY", axis=0, ascending=True)
 
     """LOOK AT OTHER VISUALIZATIONS TO SEE IF ANY HAVE A SIMILAR DATA PROCESS"""
 
     return df
 
 
-def create_figure(df: pd.DataFrame, interval):
+def create_figure(df: pd.DataFrame, start_date, end_date):
     fig = px.box(df, y="Duration")
 
     return fig
