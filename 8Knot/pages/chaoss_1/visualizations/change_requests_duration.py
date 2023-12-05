@@ -180,21 +180,34 @@ def process_data(df: pd.DataFrame, start_date, end_date):
     df["created"] = pd.to_datetime(df["created"], utc=True)
     df["merged"] = pd.to_datetime(df["merged"], utc=True)
     df["closed"] = pd.to_datetime(df["closed"], utc=True)
-    # logging.warning(f"*********************** TEST PRINT ***********************")
-    # pd.set_option('display.max_rows', None, 'display.max_columns', None)
-    # logging.warning(f"{df}")
-    # logging.warning(f"*********************** END TEST *************************")
 
     # order values chronologically by created date
     df = df.sort_values(by="created", axis=0, ascending=True)
 
     # then include only those change requests created within the time scope
-    
+    index = 0
+    row_count = df.shape[0]
+    while index < row_count:
+        # drop rows with important fields blank
+        logging.warning(f"********** {df['merged'][index]} --- {df['created'][index]}")
+        if df['merged'][index] is None or df['created'][index] is None:
+            df.drop(index)
+            continue
 
+        # then ensure created date is within date range
+        elif df['created'][index] < start_date or df['created'][index] > end_date:
+            df.drop(index)
+
+    # then add new column for duration
+    index = 0
+    row_count = df.shape[0]
+    while index < row_count:
+        df['duration'][index] = (df['merged'][index] - df['created'][index]).dt.days
+    
     return df
 
 
 def create_figure(df: pd.DataFrame, start_date, end_date):
-    fig = px.box(df, y="Duration")
+    fig = px.box(df, y="duration")
 
     return fig
