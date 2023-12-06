@@ -6,6 +6,8 @@ import warnings
 # import visualization cards
 from .visualizations.issue_response_time import gc_issue_response_time
 from .visualizations.organizational_diversity import gc_organizational_diversity
+from .visualizations.change_requests_duration import gc_review_cycle_duration
+
 
 warnings.filterwarnings("ignore")
 
@@ -17,6 +19,13 @@ layout = dbc.Container(
             [
                 dbc.Col(gc_issue_response_time, width=6),
                 dbc.Col(gc_organizational_diversity, width=6),
+            ],
+            align="center",
+            style={"marginBottom": ".5%"},
+        ),
+        dbc.Row(
+            [
+                dbc.Col(gc_review_cycle_duration, width=6),
             ],
             align="center",
             style={"marginBottom": ".5%"},
