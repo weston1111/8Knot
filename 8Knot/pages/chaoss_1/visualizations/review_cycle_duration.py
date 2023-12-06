@@ -18,6 +18,7 @@ import time
 
 PAGE = "chaoss_1"
 VIZ_ID = "prs-review-cycle-duration"
+# NOTE: Need to fix mean/median dataframes
 
 gc_review_cycle_duration = dbc.Card(
     [
@@ -148,7 +149,8 @@ def process_data(df: pd.DataFrame, interval):
     df["closed"] = pd.to_datetime(df["closed"], utc=True)
     mean = pd.DataFrame(None, columns=["Date","Value"])
     median = pd.DataFrame(None, columns=["Date","Value"])
-    diff = pd.DataFrame(None, columns=["Duration"])
+    diff_df = pd.DataFrame(None, columns=["Duration"])
+    diff = []
 
     # order values chronologically by creation date
     df = df.sort_values(by="created", axis=0, ascending=True)
@@ -176,14 +178,20 @@ def process_data(df: pd.DataFrame, interval):
     df_closed = closed_range.to_frame().reset_index().rename(columns={"index": "Date"})
     df_closed["Date"] = pd.to_datetime(df_closed["Date"].astype(str).str[:period_slice])
 
-    diff["Duration"] = (df["closed"] - df["created"]).dt.days
-    logging.warning(f"\n\n\nDIFF\n{diff}\n\n\n")
+    for x,y in zip(df["closed"], df["created"]):
+        difference = y - x
+        diff.append(difference.days)
 
-    mean["Value"] = diff["Duration"]
+    for x in range(1,50):
+        logging.warning(f"\n\n\nDIFF\n{diff[x]}\n\n\n")
+    
+    diff_df["Duration"] = diff
+
+    mean["Value"] = diff_df["Duration"]
     mean["Date"] = df_closed["Date"]
     mean.groupby(pd.PeriodIndex(mean["Date"], freq=interval)).mean()
 
-    median["Value"] = diff["Duration"]
+    median["Value"] = diff_df["Duration"]
     median["Date"] = df_closed["Date"]
     median.groupby(pd.PeriodIndex(median["Date"], freq=interval)).median()
 
@@ -237,7 +245,7 @@ def create_figure(
     )
     fig.update_layout(
         xaxis_title=x_name,
-        yaxis_title="%",
+        yaxis_title="Hrs",
         bargroupgap=0.1,
         margin_b=40,
         font=dict(size=14),
