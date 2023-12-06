@@ -9,6 +9,7 @@ from .visualizations.organizational_diversity import gc_organizational_diversity
 from .visualizations.review_cycle_duration import gc_review_cycle_duration
 
 
+
 warnings.filterwarnings("ignore")
 
 dash.register_page(__name__, path="/chaoss_1")
@@ -17,8 +18,8 @@ layout = dbc.Container(
     [
         dbc.Row(
             [
-                dbc.Col(gc_issue_response_time, width=6),
-                dbc.Col(gc_organizational_diversity, width=6),
+                dbc.Col(gc_defect_resolution_duration, width=6),
+                dbc.Col(gc_change_requests_duration, width=6),
             ],
             align="center",
             style={"marginBottom": ".5%"},
