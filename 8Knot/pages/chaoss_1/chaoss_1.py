@@ -7,7 +7,8 @@ import warnings
 from .visualizations.issue_response_time import gc_issue_response_time
 from .visualizations.organizational_diversity import gc_organizational_diversity
 from .visualizations.review_cycle_duration import gc_review_cycle_duration
-
+from .visualizations.defect_resolution_duration import gc_defect_resolution_duration
+from.visualizations.change_requests_duration import gc_change_requests_duration
 
 
 warnings.filterwarnings("ignore")
